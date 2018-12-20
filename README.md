@@ -3,6 +3,11 @@
 You can test these commands and script `./backery/backery.sh` from this repo.
 First of all please clone this repository `git clone https://github.com/valda-z/azure-vm-image-bakery.git` and then you can run this example commands from directory `azure-vm-image-bakery`.
 
+How it works?
+* First step - create resource group for images and blobstorage for communication between bakery and VM in creation process.
+* Second step is bakery.sh - script which creates temporary resource group, VM is created in this group, application are installed to VM and finally VM is generalized. Image of this pre-baked VM is stored like custom image. For this demo is used tomcat server with one WAR sample application installed like default (root) app.
+* Last step - there is sample which creates VM scale set from final baked image and we can test that application works there.
+
 ```bash
 export RG=QBAKERY
 export RGTMP=QBAKERYTMP
