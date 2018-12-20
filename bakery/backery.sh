@@ -7,7 +7,7 @@
 LOCATION=""
 RG_BAKERY=""
 RG_TMP=""
-VMNAME="myVM"
+VMNAME=""
 IMAGENAME=""
 BAKERYSTORAGE=""
 
@@ -48,14 +48,14 @@ function throw_if_empty() {
   fi
 }
 
-RB_TMP="${RG_BAKERY}-$(od -vAn -N4 -tu4 < /dev/urandom | xargs)"
+RG_TMP="${RG_BAKERY}$(od -vAn -N4 -tu4 < /dev/urandom | xargs)"
+echo $RG_TMP
+VMNAME="vm$(od -vAn -N4 -tu4 < /dev/urandom | xargs)"
 
 throw_if_empty --location $LOCATION
-throw_if_empty --resource-group $RG_BAKERY
-throw_if_empty --resource-group $RG_TMP
-throw_if_empty --resource-group $VMNAME
-throw_if_empty --resource-group $IMAGENAME
-throw_if_empty --resource-group $BAKERYSTORAGE
+throw_if_empty --resource-group-backery $RG_BAKERY
+throw_if_empty --imagename $IMAGENAME
+throw_if_empty --bakery-storage $BAKERYSTORAGE
 
 az group create -l ${LOCATION} -n ${RG_TMP}
 
@@ -73,7 +73,7 @@ package_upgrade: true
 packages:
   - curl
 runcmd:
-  - yum install -y git gcc libffi-devel python-devel openssl-devel epel-release
+  - curl -s https://raw.githubusercontent.com/valda-z/azure-vm-image-bakery/master/bakery/assets/install.sh | bash -s -- ${VMNAME} ${BAKERYSTORAGE} \"${sas}\"
 " > ${RB_TMP}.txt
 
 # create VM and install software things inside
